@@ -9,4 +9,5 @@
                  [compojure "1.1.5"]
                  [ring/ring-devel "1.1.8"]
                  [ring/ring-core "1.1.8"]
-                 [http-kit "2.0.0"]])
+                 [http-kit "2.0.0"]]
+  :profiles {:dev {:source-paths ["dev"]}})
