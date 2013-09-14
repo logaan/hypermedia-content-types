@@ -10,8 +10,13 @@ I have looked into using a REST library to assist. [bishop]
 response types and expected the application layer to do the rendering.
 [Clothesline] (https://github.com/banjiewen/Clothesline) also appear to be
 doing routing.  [plugboard] (https://github.com/malcolmsparks/plugboard) is no
-longer maintained, the author is now consentrating on liberator. [Liberator]
-(http://clojure-liberator.github.io/liberator/) looks good.
+longer maintained, the author is now consentrating on liberator.
+
+[Liberator] (http://clojure-liberator.github.io/liberator/) does not take
+responsability for routing. It also seems popular and well documented. The
+[babel example] [babel] demonstrates default action for `application/json`. If
+that could be extended to work with `text/html` and `application/edn` as well
+then that would pretty much take care of my requirements.
 
 ## Usage
 
@@ -22,3 +27,5 @@ FIXME
 Copyright © 2013 FIXME
 
 Distributed under the Eclipse Public License, the same as Clojure.
+
+[babel]: http://clojure-liberator.github.io/liberator/tutorial/conneg.html
