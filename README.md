@@ -36,8 +36,8 @@ would I introducer some new default behavior?_.
 
 ## Usage
 
-  lein repl
-  (start)
+    lein repl
+    (start)
 
 Then open your browser to <http://localhost:8080/>.
 
