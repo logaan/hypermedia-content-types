@@ -1,16 +1,25 @@
 (ns hypermedia-content-types.core
   (:use [org.httpkit.server :only [run-server]])
   (:require [ring.middleware.reload :as reload]
+            [hiccup.core :refer [html]]
             [liberator.core :refer  [resource defresource]]
+            [liberator.representation :refer [render-map-generic]]
             [compojure.route :as route] 
             [compojure.handler :refer [site]]
             [compojure.core :refer [defroutes ANY GET POST]]))
 
 (defrecord Product [name category price])
 
+(def baseball-cap
+  (Product. "Baseball Cap" "Headwear" "$20"))
+
+(def nike-air
+  (Product. "Nike Air" "Shoe" "$120"))
+
+(def products [baseball-cap nike-air])
+
 (defn store-data [ctx]
-  [(Product. "Baseball Cap" "Headwear" "$20")
-   (Product. "Nike Air" "Shoe" "$120")])
+  products)
 
 (def default-media-types
   ["application/json"
@@ -21,6 +30,32 @@
    "text/plain"
    "text/tab-separated-values" 
    "text/html"])
+
+(defmethod render-map-generic "text/html" [data context]
+  (html [:div
+         [:h1 (-> data :class first)]
+         [:h2 "Properties"]
+         [:dl
+          (mapcat (fn [[key value]] `([:dt ~key] [:dd ~value]))
+               (:properties data))]]))
+
+(defmethod render-map-generic "application/siren+edn" [data context]
+  (binding [*print-dup* false]
+    (with-out-str (pr data))))
+
+(defresource product
+  :allowed-methods [:get]
+  :available-media-types ["application/siren+edn" "text/html"]
+  :handle-ok (fn [ctx]
+               {:class ["product"]
+                :properties (into {} baseball-cap)
+                :actions [{:name "delete-item"
+                           :title "Delete Item"
+                           :method "DELETE"
+                           :href "/products/1"
+                           :type "application/x-www-form-urlencoded"}]
+                :links [{:rel ["self"] :href "/products/1"}
+                        {:rel ["listing"] :href "/products"}]}))
 
 (defresource index
   :allowed-methods [:options :head :get :post :put :delete]
@@ -51,6 +86,7 @@
   (ANY "/" [] index)
   (ANY "/secret" [] secret)
   (ANY "/babel" []  babel)
+  (ANY "/products/:id" [] product)
   (route/not-found "<p>Page not found.</p>"))
 
 (def reloading-handler
