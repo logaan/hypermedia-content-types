@@ -6,15 +6,27 @@
             [compojure.handler :refer [site]]
             [compojure.core :refer [defroutes ANY GET POST]]))
 
-(defn seconds-since-epoch [ctx]
-  (format "<html>It's %d milliseconds since the beginning of the
-          epoch." (System/currentTimeMillis)))
+(defrecord Product [name category price])
+
+(defn store-data [ctx]
+  [(Product. "Baseball Cap" "Headwear" "$20")
+   (Product. "Nike Air" "Shoe" "$120")])
+
+(def default-media-types
+  ["application/json"
+   "application/edn"
+   "application/clojure"
+   "application/xhtml+xml"
+   "text/csv"
+   "text/plain"
+   "text/tab-separated-values" 
+   "text/html"])
 
 (defresource index
   :allowed-methods [:options :head :get :post :put :delete]
-  :available-media-types ["text/plain"]
-  :handle-ok seconds-since-epoch
-  :handle-created seconds-since-epoch)
+  :available-media-types default-media-types
+  :handle-ok store-data
+  :handle-created store-data)
 
 (defresource secret
   :available-media-types ["text/html"]
