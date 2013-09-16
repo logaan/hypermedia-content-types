@@ -36,11 +36,14 @@ would I introducer some new default behavior?_.
 
 ## Usage
 
-FIXME
+  lein repl
+  (start)
+
+Then open your browser to <http://localhost:8080/>.
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Logan Campbell
 
 Distributed under the Eclipse Public License, the same as Clojure.
 
